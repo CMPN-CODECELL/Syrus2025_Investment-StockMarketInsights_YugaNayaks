@@ -1,0 +1,219 @@
+{
+  "_id": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "inferenceEngine": {
+    "modelId": "4cf651d9-edf3-455f-a22e-53cc67fcc07b"
+  },
+  "integrationId": "financial-management-system-5834",
+  "integrations": {},
+  "intentClassification": {
+    "modelId": "4cf651d9-edf3-455f-a22e-53cc67fcc07b"
+  },
+  "name": "InvestmentGuardian",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "status": "Active",
+  "useAsChatbot": true,
+  "variables": {
+    "secrets": [
+      {
+        "_id": "72ef9842-211d-46b0-b788-5a052ae413a2",
+        "name": "STOCK_API_KEY",
+        "value": "T5630YKQF3FS4VIU",
+        "type": "string",
+        "secured": false
+      }
+    ],
+    "agent": [
+      "selectedStock",
+      "overviewData",
+      "balanceSheetData"
+    ]
+  },
+  "miniAgentIds": [
+    "04f02a68-dddc-42fa-9ceb-a96c59bafa34",
+    "aee83d8f-a598-4e78-985b-7c81833eacb4",
+    "81a5a7ef-8f8e-4aac-b00a-d29f88060be6",
+    "2d06f109-710f-4d8c-b931-0890c203ed14"
+  ],
+  "webhook": {
+    "enabled": false,
+    "privateKey": "CiQAVNwaP6AXWz8CXL5m+m5g874feFxociJyXJ6dgXh+9EL0AKQS7gEANi/OAF46yYsWJ2JDJKe5yJZ04kyla0c+MuDoocBi/cgzmyZfXhlsWVG8b7CUq8BVabNJXjnkDNQsXZ1zsb+CZEuqz2+BrwHC7tuIbeiE2HCbEvg+nB60sbL/4Qskm11vFPQFhD0sPPCcgyUqYQucYFEZrZlDs7uECQDwykNTBQPfMjvl//4Tw9vD6iasB1cVhPF/nCiDnWkUoEZH7+LR8eT+yxu4PqW4ETeyNdkQgtTv+PhyiCz68ESOoFtjL1Lrn/iCUy4s80/CwKwXKzFulrqWQrY82gVek9SMfmghMyV8BgwhLkGYgNO+HCf+",
+    "workflowId": "e3f43ad8-45c8-437e-b155-a7978c37cce0"
+  },
+  "miniAgents": [
+    {
+      "_id": "2d06f109-710f-4d8c-b931-0890c203ed14",
+      "integrationId": "sebibot-5727",
+      "intents": [
+        {
+          "_id": "compliance-check-5727",
+          "name": "Compliance Check",
+          "description": "Performs compliance checks based on SEBI regulations and fraud schema.",
+          "examples": [
+            "Check if my transactions comply with SEBI regulations.",
+            "Perform a compliance check for my portfolio.",
+            "Is this transaction compliant with SEBI rules?"
+          ],
+          "flowType": "Workflow",
+          "workflowId": "c33b7dec-4bb5-4f9f-b91d-5f5c00da2d9d"
+        },
+        {
+          "_id": "broker-api-integration-5727",
+          "name": "Broker API Integration",
+          "description": "Integrates with broker APIs to fetch real-time compliance data and reports.",
+          "examples": [
+            "Fetch compliance reports from the broker API.",
+            "Integrate with the broker API for real-time data.",
+            "Get the latest compliance data from my broker."
+          ],
+          "flowType": "Workflow",
+          "workflowId": "fc01e790-326e-4753-82e9-726a98675508"
+        }
+      ],
+      "name": "SEBIBot",
+      "scope": "Handles compliance reporting by adhering to SEBI fraud schema and integrating with broker APIs for real-time data.",
+      "miniAgentId": "2d06f109-710f-4d8c-b931-0890c203ed14"
+    },
+    {
+      "_id": "81a5a7ef-8f8e-4aac-b00a-d29f88060be6",
+      "integrationId": "risksentinel-3328",
+      "intents": [
+        {
+          "_id": "risk-assessment-3328",
+          "name": "Risk Assessment",
+          "description": "Evaluates the risk level of a portfolio using correlation matrices and decision tree analysis.",
+          "examples": [
+            "Assess the risk of my current portfolio.",
+            "What is the risk level of my investments?",
+            "Evaluate the risk using correlation matrices."
+          ],
+          "flowType": "Workflow",
+          "workflowId": "b759f49b-74bc-49d1-b888-cadbc85ce3a9"
+        },
+        {
+          "_id": "volatility-alerts-3328",
+          "name": "Volatility Alerts",
+          "description": "Generates alerts for significant volatility changes in the market.",
+          "examples": [
+            "Alert me about any significant market volatility.",
+            "Notify me if there's a sudden change in market volatility.",
+            "Are there any volatility alerts for my portfolio?"
+          ],
+          "flowType": "Workflow",
+          "workflowId": "71482dff-aef0-484a-9ea2-9829fd15f159"
+        }
+      ],
+      "name": "RiskSentinel",
+      "scope": "Ensures portfolio safety by using decision tree analysis, correlation matrices, and volatility alerts to manage and mitigate risks.",
+      "miniAgentId": "81a5a7ef-8f8e-4aac-b00a-d29f88060be6"
+    },
+    {
+      "_id": "aee83d8f-a598-4e78-985b-7c81833eacb4",
+      "integrationId": "stockguru-0978",
+      "intents": [
+        {
+          "_id": "investment-recommendations-0978",
+          "name": "Investment Recommendations",
+          "description": "Offers investment advice based on user risk profiles and market trends.",
+          "examples": [
+            "What are the best stocks to invest in right now?",
+            "Give me investment recommendations based on my risk profile.",
+            "What does the market look like for a conservative investor?"
+          ],
+          "flowType": "Workflow",
+          "workflowId": "d2e0e3f7-2014-4113-a3b6-86ec6ac944ad"
+        },
+        {
+          "_id": "market-analysis-0978",
+          "name": "Market Analysis",
+          "description": "Provides analysis of market trends and predictions using multilingual NLP.",
+          "examples": [
+            "Analyze the current market trends.",
+            "What are the predictions for the stock market this week?",
+            "Provide a market analysis in Spanish."
+          ],
+          "flowType": "Workflow",
+          "workflowId": "969da6eb-ade6-4f94-b74d-4d58fdda46ad"
+        }
+      ],
+      "name": "StockGuru",
+      "scope": "Provides investment insights using predictive analytics, including risk-profile filtering and multilingual NLP for diverse market analysis.",
+      "miniAgentId": "aee83d8f-a598-4e78-985b-7c81833eacb4"
+    },
+    {
+      "_id": "04f02a68-dddc-42fa-9ceb-a96c59bafa34",
+      "integrationId": "fraudhunter-8395",
+      "intents": [
+        {
+          "_id": "detect-anomalies-8395",
+          "name": "Detect Anomalies",
+          "description": "Identifies unusual patterns or activities in trading volumes that may indicate fraudulent behavior.",
+          "examples": [
+            "Is there any suspicious activity in today's trading?",
+            "Detect any anomalies in the recent transactions.",
+            "Are there any unusual trading volumes today?"
+          ],
+          "flowType": "Workflow",
+          "workflowId": "bfe1e2f7-5ae2-4ab7-869c-18f644f1db47"
+        },
+        {
+          "_id": "scam-alert-8395",
+          "name": "Scam Alert",
+          "description": "Generates alerts for potential scams based on predefined thresholds and NLP analysis.",
+          "examples": [
+            "Alert me if there's a potential scam.",
+            "Notify me about any scam alerts.",
+            "Is there a scam alert for this transaction?"
+          ],
+          "flowType": "Workflow",
+          "workflowId": "23e7c3fc-c095-44cc-8aff-8b10293c6f2c"
+        }
+      ],
+      "name": "FraudHunter",
+      "scope": "Handles queries related to scam detection in financial transactions using anomaly detection techniques, including monitoring trading volumes and identifying suspicious activities.",
+      "miniAgentId": "04f02a68-dddc-42fa-9ceb-a96c59bafa34"
+    }
+  ],
+  "rags": [],
+  "intentWorkflows": [
+    {
+      "_id": "23e7c3fc-c095-44cc-8aff-8b10293c6f2c",
+      "integrationId": "scam-alert-8933",
+      "name": "Workflow for Scam Alert"
+    },
+    {
+      "_id": "71482dff-aef0-484a-9ea2-9829fd15f159",
+      "integrationId": "volatility-alerts-3650",
+      "name": "Workflow for Volatility Alerts"
+    },
+    {
+      "_id": "969da6eb-ade6-4f94-b74d-4d58fdda46ad",
+      "integrationId": "market-analysis-1258",
+      "name": "Workflow for Market Analysis"
+    },
+    {
+      "_id": "b759f49b-74bc-49d1-b888-cadbc85ce3a9",
+      "integrationId": "risk-assessment-3650",
+      "name": "Workflow for Risk Assessment"
+    },
+    {
+      "_id": "bfe1e2f7-5ae2-4ab7-869c-18f644f1db47",
+      "integrationId": "detect-anomalies-8933",
+      "name": "Workflow for Detect Anomalies"
+    },
+    {
+      "_id": "c33b7dec-4bb5-4f9f-b91d-5f5c00da2d9d",
+      "integrationId": "compliance-check-7899",
+      "name": "Workflow for Compliance Check"
+    },
+    {
+      "_id": "d2e0e3f7-2014-4113-a3b6-86ec6ac944ad",
+      "integrationId": "investment-recommendations-1258",
+      "name": "Workflow for Investment Recommendations"
+    },
+    {
+      "_id": "fc01e790-326e-4753-82e9-726a98675508",
+      "integrationId": "broker-api-integration-7899",
+      "name": "Workflow for Broker API Integration"
+    }
+  ]
+}
