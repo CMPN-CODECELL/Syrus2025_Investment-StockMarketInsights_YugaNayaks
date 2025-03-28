@@ -1,0 +1,39 @@
+{
+  "_id": "2d06f109-710f-4d8c-b931-0890c203ed14",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "sebibot-5727",
+  "intentClassification": {
+    "modelId": "4cf651d9-edf3-455f-a22e-53cc67fcc07b"
+  },
+  "intents": [
+    {
+      "_id": "compliance-check-5727",
+      "name": "Compliance Check",
+      "description": "Performs compliance checks based on SEBI regulations and fraud schema.",
+      "examples": [
+        "Check if my transactions comply with SEBI regulations.",
+        "Perform a compliance check for my portfolio.",
+        "Is this transaction compliant with SEBI rules?"
+      ],
+      "flowType": "Workflow",
+      "workflowId": "c33b7dec-4bb5-4f9f-b91d-5f5c00da2d9d"
+    },
+    {
+      "_id": "broker-api-integration-5727",
+      "name": "Broker API Integration",
+      "description": "Integrates with broker APIs to fetch real-time compliance data and reports.",
+      "examples": [
+        "Fetch compliance reports from the broker API.",
+        "Integrate with the broker API for real-time data.",
+        "Get the latest compliance data from my broker."
+      ],
+      "flowType": "Workflow",
+      "workflowId": "fc01e790-326e-4753-82e9-726a98675508"
+    }
+  ],
+  "name": "SEBIBot",
+  "primaryWorkflowId": "957daf8f-b4cf-4bb0-9df0-e10db5971e04",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "scope": "Handles compliance reporting by adhering to SEBI fraud schema and integrating with broker APIs for real-time data.",
+  "status": "Active"
+}
