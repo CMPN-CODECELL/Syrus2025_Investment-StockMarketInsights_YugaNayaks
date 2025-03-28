@@ -1,0 +1,7 @@
+{
+  "_id": "bd4f2bbd-c7f7-4c7e-b662-b8521b4c0d5c",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "code": "const main = () => {\n    let stocks = input?.data?.bestMatches || [];\n    stocks = Array.isArray(stocks) ? stocks : []\n\n\n    return {\n        options: stocks.map(s => ({\n            label: s[\"2. name\"],\n            value: s[\"1. symbol\"],\n            subTitle: `${s[\"1. symbol\"]} | ${s[\"3. type\"]}`\n        })),\n        type: \"cardSelect\", subTitleField: \"subTitle\"\n    }\n\n\n};\n\n\nmain()\n",
+  "name": "Format Option For Input",
+  "status": "Active"
+}
