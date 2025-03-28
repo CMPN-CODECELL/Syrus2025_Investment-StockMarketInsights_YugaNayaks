@@ -1,0 +1,39 @@
+{
+  "_id": "aee83d8f-a598-4e78-985b-7c81833eacb4",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "stockguru-0978",
+  "intentClassification": {
+    "modelId": "4cf651d9-edf3-455f-a22e-53cc67fcc07b"
+  },
+  "intents": [
+    {
+      "_id": "investment-recommendations-0978",
+      "name": "Investment Recommendations",
+      "description": "Offers investment advice based on user risk profiles and market trends.",
+      "examples": [
+        "What are the best stocks to invest in right now?",
+        "Give me investment recommendations based on my risk profile.",
+        "What does the market look like for a conservative investor?"
+      ],
+      "flowType": "Workflow",
+      "workflowId": "d2e0e3f7-2014-4113-a3b6-86ec6ac944ad"
+    },
+    {
+      "_id": "market-analysis-0978",
+      "name": "Market Analysis",
+      "description": "Provides analysis of market trends and predictions using multilingual NLP.",
+      "examples": [
+        "Analyze the current market trends.",
+        "What are the predictions for the stock market this week?",
+        "Provide a market analysis in Spanish."
+      ],
+      "flowType": "Workflow",
+      "workflowId": "969da6eb-ade6-4f94-b74d-4d58fdda46ad"
+    }
+  ],
+  "name": "StockGuru",
+  "primaryWorkflowId": "57b48abc-a895-4858-a80a-a9f722865bec",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "scope": "Provides investment insights using predictive analytics, including risk-profile filtering and multilingual NLP for diverse market analysis.",
+  "status": "Active"
+}
