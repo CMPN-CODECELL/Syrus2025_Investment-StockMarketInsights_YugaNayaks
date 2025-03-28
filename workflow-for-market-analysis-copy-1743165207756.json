@@ -1,0 +1,348 @@
+{
+  "_id": "8714899d-b61e-401d-91cf-226e3b56061d",
+  "name": "Workflow for Market Analysis Copy 1743165207756",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "integrationId": "workflow-for-market-analysis-copy-1743165207756",
+  "status": "Active",
+  "version": "latest",
+  "type": "Conversational",
+  "tasks": [
+    {
+      "_id": "68248b80-de1c-4519-8627-0be84027dcb9",
+      "type": "Display",
+      "config": {
+        "description": "Display the response to the user",
+        "name": "Display",
+        "type": "text",
+        "text": "Hi there! Intent $input.intent has been matched",
+        "formatVariables": [],
+        "rawText": ""
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "68248b80-de1c-4519-8627-0be84027dcb9-1743160486731",
+          "nextTask": "1743160486731"
+        }
+      ]
+    },
+    {
+      "_id": "1743160486731",
+      "type": "Prompt",
+      "config": {
+        "description": "Prompt for LLM",
+        "name": "Prompt",
+        "modelId": "gpt-4o",
+        "systemPrompt": "Your task is to extract the company name from a user's query and return it in a JSON format. Ensure the response follows the structure below:\n\n{ \"companyName\": \"Extracted Company Name\" }\n\n\nFocus solely on identifying and returning company names. Ignore any queries that do not pertain to this task.\n\nIf you dont find any company in the user query , your response should include\n{ \"companyNotFound\": true }",
+        "base64DocumentData": "",
+        "documentIds": "",
+        "responseFormat": "json",
+        "query": "$agent.query",
+        "temperature": null
+      },
+      "transitions": [
+        {
+          "name": "Sucess Call",
+          "rules": [
+            {
+              "type": "any",
+              "path": "$output.error",
+              "operator": "notExists",
+              "value": ""
+            }
+          ],
+          "clause": "And",
+          "_id": "1743160486731-1743160943075",
+          "nextTask": "1743160943075"
+        },
+        {
+          "name": "Not working",
+          "rules": [
+            {
+              "type": "any",
+              "path": "$output.error",
+              "operator": "exists",
+              "value": ""
+            }
+          ],
+          "clause": "And",
+          "_id": "1743160486731-1743161495482",
+          "nextTask": "1743161495482"
+        }
+      ]
+    },
+    {
+      "_id": "1743160943075",
+      "type": "APICall",
+      "config": {
+        "description": "Make an API call",
+        "name": "API Call",
+        "url": "https://www.alphavantage.co/query",
+        "data": "",
+        "dataFormat": "raw",
+        "rawDataFormatType": "text",
+        "headers": [],
+        "params": [
+          {
+            "key": "function",
+            "value": "SYMBOL_SEARCH"
+          },
+          {
+            "key": "apikey",
+            "value": "$secret.STOCK_API_KEY"
+          },
+          {
+            "key": "keywords",
+            "value": "PAYTM"
+          }
+        ],
+        "method": "GET"
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "1743160943075-1743163831574",
+          "nextTask": "1743163831574"
+        }
+      ]
+    },
+    {
+      "_id": "1743161495482",
+      "type": "Display",
+      "config": {
+        "description": "Show data",
+        "name": "Display (1)",
+        "formatVariables": [],
+        "type": "text",
+        "text": "<p>Error! Unable to find the Stock.</p>",
+        "rawText": "Error! Unable to find the Stock."
+      },
+      "transitions": []
+    },
+    {
+      "_id": "1743163831574",
+      "type": "Loader",
+      "config": {
+        "description": "Show loading messages in conversation",
+        "name": "Loader",
+        "text": "Loading!!"
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "1743163831574-1743165017765",
+          "nextTask": "1743165017765"
+        }
+      ]
+    },
+    {
+      "_id": "1743165017765",
+      "type": "Display",
+      "config": {
+        "description": "Show data",
+        "name": "Display (1)",
+        "formatVariables": [],
+        "type": "text",
+        "text": "<p>Output</p>",
+        "rawText": "Output"
+      },
+      "transitions": []
+    }
+  ],
+  "reactflow": {
+    "viewport": {
+      "x": 110.7799301062148,
+      "y": 146.9750841559213,
+      "zoom": 0.5
+    },
+    "nodes": [
+      {
+        "id": "0",
+        "type": "Start",
+        "position": {
+          "x": 360,
+          "y": 400
+        },
+        "data": {},
+        "deletable": false,
+        "measured": {
+          "width": 274,
+          "height": 135
+        },
+        "selected": false
+      },
+      {
+        "position": {
+          "x": 518,
+          "y": -15
+        },
+        "type": "Display",
+        "id": "68248b80-de1c-4519-8627-0be84027dcb9",
+        "data": {},
+        "measured": {
+          "width": 293,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 770,
+          "y": 392
+        },
+        "type": "Prompt",
+        "id": "1743160486731",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 1113,
+          "y": 105
+        },
+        "type": "APICall",
+        "id": "1743160943075",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 912,
+          "y": -53
+        },
+        "type": "Display",
+        "id": "1743161495482",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 1437.9060219984249,
+          "y": -62
+        },
+        "type": "Loader",
+        "id": "1743163831574",
+        "data": {},
+        "measured": {
+          "width": 320,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 1492,
+          "y": 219
+        },
+        "type": "Display",
+        "id": "1743165017765",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "0-0",
+        "type": "Start",
+        "source": "0",
+        "target": "68248b80-de1c-4519-8627-0be84027dcb9",
+        "sourceHandle": "0-source-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "68248b80-de1c-4519-8627-0be84027dcb9-1743160486731",
+        "source": "68248b80-de1c-4519-8627-0be84027dcb9",
+        "target": "1743160486731",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "68248b80-de1c-4519-8627-0be84027dcb9-source-1",
+        "targetHandle": "1743160486731-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743160486731-1743160943075",
+        "source": "1743160486731",
+        "target": "1743160943075",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743160486731-source-1",
+        "targetHandle": "1743160943075-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743160486731-1743161495482",
+        "source": "1743160486731",
+        "target": "1743161495482",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743160486731-source-1",
+        "targetHandle": "1743161495482-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743160943075-1743163831574",
+        "source": "1743160943075",
+        "target": "1743163831574",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743160943075-source-1",
+        "targetHandle": "1743163831574-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743163831574-1743165017765",
+        "source": "1743163831574",
+        "target": "1743165017765",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743163831574-source-1",
+        "targetHandle": "1743165017765-target-1",
+        "selected": false
+      }
+    ]
+  },
+  "startTaskId": "68248b80-de1c-4519-8627-0be84027dcb9",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636"
+}

@@ -1,0 +1,24 @@
+{
+  "_id": "bfe1e2f7-5ae2-4ab7-869c-18f644f1db47",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "detect-anomalies-8933",
+  "name": "Workflow for Detect Anomalies",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "startTaskId": "f30e4131-fff1-4337-bb4e-9a76e4611b96",
+  "status": "Active",
+  "tasks": [
+    {
+      "_id": "f30e4131-fff1-4337-bb4e-9a76e4611b96",
+      "transitions": [],
+      "type": "Display",
+      "config": {
+        "name": "Display",
+        "description": "Display the response to the user",
+        "type": "text",
+        "text": "Hi there! Intent $input.intent has been matched"
+      }
+    }
+  ],
+  "type": "Conversational",
+  "version": "latest"
+}
