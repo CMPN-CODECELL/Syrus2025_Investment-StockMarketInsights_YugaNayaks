@@ -1,0 +1,24 @@
+{
+  "_id": "23e7c3fc-c095-44cc-8aff-8b10293c6f2c",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "scam-alert-8933",
+  "name": "Workflow for Scam Alert",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "startTaskId": "8c4ecf97-023c-4d68-a1aa-db4e0dbf34d7",
+  "status": "Active",
+  "tasks": [
+    {
+      "_id": "8c4ecf97-023c-4d68-a1aa-db4e0dbf34d7",
+      "transitions": [],
+      "type": "Display",
+      "config": {
+        "name": "Display",
+        "description": "Display the response to the user",
+        "type": "text",
+        "text": "Hi there! Intent $input.intent has been matched"
+      }
+    }
+  ],
+  "type": "Conversational",
+  "version": "latest"
+}
