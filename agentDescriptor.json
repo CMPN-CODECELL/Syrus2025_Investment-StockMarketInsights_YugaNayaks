@@ -1,0 +1,101 @@
+{
+  "aiPersonaIntegrationId": "financial-management-system-5834",
+  "version": "1.0.0",
+  "description": "AI Agent financial-management-system-5834 package version 1.0.0",
+  "data": {
+    "workflows": [
+      [
+        "workflows",
+        "detect-anomalies-8933.json"
+      ],
+      [
+        "workflows",
+        "scam-alert-8933.json"
+      ],
+      [
+        "workflows",
+        "ma-fraudhunter-8395-primary-workflow-for-fraud-hunter.json"
+      ],
+      [
+        "workflows",
+        "investment-recommendations-1258.json"
+      ],
+      [
+        "workflows",
+        "market-analysis-1258.json"
+      ],
+      [
+        "workflows",
+        "ma-stockguru-0978-primary-workflow-for-stock-guru.json"
+      ],
+      [
+        "workflows",
+        "risk-assessment-3650.json"
+      ],
+      [
+        "workflows",
+        "volatility-alerts-3650.json"
+      ],
+      [
+        "workflows",
+        "ma-risksentinel-3328-primary-workflow-for-risk-sentinel.json"
+      ],
+      [
+        "workflows",
+        "compliance-check-7899.json"
+      ],
+      [
+        "workflows",
+        "broker-api-integration-7899.json"
+      ],
+      [
+        "workflows",
+        "ma-sebibot-5727-primary-workflow-for-sebi-bot.json"
+      ],
+      [
+        "workflows",
+        "workflow-for-market-analysis-copy-1743165207756.json"
+      ]
+    ],
+    "models": [
+      [
+        "models",
+        "azure-gpt-4o-mini.json"
+      ],
+      [
+        "models",
+        "gpt-4o.json"
+      ]
+    ],
+    "miniAgents": [
+      [
+        "miniAgents",
+        "fraudhunter-8395.json"
+      ],
+      [
+        "miniAgents",
+        "stockguru-0978.json"
+      ],
+      [
+        "miniAgents",
+        "risksentinel-3328.json"
+      ],
+      [
+        "miniAgents",
+        "sebibot-5727.json"
+      ]
+    ],
+    "snippets": [
+      [
+        "snippets",
+        "Format Option For Input.json"
+      ]
+    ],
+    "aiPersonas": [
+      [
+        "aiPersonas",
+        "financial-management-system-5834.json"
+      ]
+    ]
+  }
+}
