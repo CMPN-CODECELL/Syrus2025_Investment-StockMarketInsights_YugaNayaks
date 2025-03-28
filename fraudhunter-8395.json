@@ -1,0 +1,39 @@
+{
+  "_id": "04f02a68-dddc-42fa-9ceb-a96c59bafa34",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "fraudhunter-8395",
+  "intentClassification": {
+    "modelId": "4cf651d9-edf3-455f-a22e-53cc67fcc07b"
+  },
+  "intents": [
+    {
+      "_id": "detect-anomalies-8395",
+      "name": "Detect Anomalies",
+      "description": "Identifies unusual patterns or activities in trading volumes that may indicate fraudulent behavior.",
+      "examples": [
+        "Is there any suspicious activity in today's trading?",
+        "Detect any anomalies in the recent transactions.",
+        "Are there any unusual trading volumes today?"
+      ],
+      "flowType": "Workflow",
+      "workflowId": "bfe1e2f7-5ae2-4ab7-869c-18f644f1db47"
+    },
+    {
+      "_id": "scam-alert-8395",
+      "name": "Scam Alert",
+      "description": "Generates alerts for potential scams based on predefined thresholds and NLP analysis.",
+      "examples": [
+        "Alert me if there's a potential scam.",
+        "Notify me about any scam alerts.",
+        "Is there a scam alert for this transaction?"
+      ],
+      "flowType": "Workflow",
+      "workflowId": "23e7c3fc-c095-44cc-8aff-8b10293c6f2c"
+    }
+  ],
+  "name": "FraudHunter",
+  "primaryWorkflowId": "e3f43ad8-45c8-437e-b155-a7978c37cce0",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "scope": "Handles queries related to scam detection in financial transactions using anomaly detection techniques, including monitoring trading volumes and identifying suspicious activities.",
+  "status": "Active"
+}
