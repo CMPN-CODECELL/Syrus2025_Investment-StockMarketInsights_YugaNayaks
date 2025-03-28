@@ -1,0 +1,24 @@
+{
+  "_id": "fc01e790-326e-4753-82e9-726a98675508",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "broker-api-integration-7899",
+  "name": "Workflow for Broker API Integration",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "startTaskId": "3760796c-cef2-40ce-9d79-9fa3a572e376",
+  "status": "Active",
+  "tasks": [
+    {
+      "_id": "3760796c-cef2-40ce-9d79-9fa3a572e376",
+      "transitions": [],
+      "type": "Display",
+      "config": {
+        "name": "Display",
+        "description": "Display the response to the user",
+        "type": "text",
+        "text": "Hi there! Intent $input.intent has been matched"
+      }
+    }
+  ],
+  "type": "Conversational",
+  "version": "latest"
+}

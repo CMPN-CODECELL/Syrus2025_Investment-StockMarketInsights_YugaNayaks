@@ -1,0 +1,24 @@
+{
+  "_id": "d2e0e3f7-2014-4113-a3b6-86ec6ac944ad",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "investment-recommendations-1258",
+  "name": "Workflow for Investment Recommendations",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "startTaskId": "aa6e4d08-4335-4332-828b-b47f96945818",
+  "status": "Active",
+  "tasks": [
+    {
+      "_id": "aa6e4d08-4335-4332-828b-b47f96945818",
+      "transitions": [],
+      "type": "Display",
+      "config": {
+        "name": "Display",
+        "description": "Display the response to the user",
+        "type": "text",
+        "text": "Hi there! Intent $input.intent has been matched"
+      }
+    }
+  ],
+  "type": "Conversational",
+  "version": "latest"
+}
