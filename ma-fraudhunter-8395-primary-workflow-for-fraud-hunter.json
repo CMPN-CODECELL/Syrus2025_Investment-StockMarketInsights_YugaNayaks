@@ -1,0 +1,337 @@
+{
+  "_id": "e3f43ad8-45c8-437e-b155-a7978c37cce0",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "ma-fraudhunter-8395-primary-workflow-for-fraud-hunter",
+  "isMiniAgentPrimaryWorkflow": true,
+  "name": "Primary Workflow for FraudHunter",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "startTaskId": "6f34e6b1-6a77-46c5-a578-8f1072ea8a54",
+  "status": "Active",
+  "tasks": [
+    {
+      "_id": "6f34e6b1-6a77-46c5-a578-8f1072ea8a54",
+      "type": "PassThrough",
+      "config": {
+        "name": "Pass Through",
+        "description": "Pass through the input to the output"
+      },
+      "transitions": [
+        {
+          "_id": "18d45993-ebc1-4990-b1eb-1dc3a293d3f9-6f34e6b1-6a77-46c5-a578-8f1072ea8a54",
+          "nextTask": "18d45993-ebc1-4990-b1eb-1dc3a293d3f9",
+          "name": "If query doesnt exists",
+          "rules": [
+            {
+              "type": "any",
+              "operator": "notExists",
+              "path": "$output.query"
+            }
+          ]
+        },
+        {
+          "_id": "165594bf-15bd-4c80-9d6a-56a74da05814-6f34e6b1-6a77-46c5-a578-8f1072ea8a54",
+          "nextTask": "165594bf-15bd-4c80-9d6a-56a74da05814",
+          "name": "If intents are already classified",
+          "rules": [
+            {
+              "type": "any",
+              "operator": "exists",
+              "path": "$output.intents"
+            },
+            {
+              "type": "any",
+              "operator": "exists",
+              "path": "$output.query"
+            }
+          ]
+        },
+        {
+          "_id": "6f34e6b1-6a77-46c5-a578-8f1072ea8a54-6aef435c-f29c-4a2b-9673-81b79920fdf7",
+          "name": "If query exists",
+          "nextTask": "6aef435c-f29c-4a2b-9673-81b79920fdf7",
+          "rules": [
+            {
+              "type": "any",
+              "operator": "exists",
+              "path": "$output.query"
+            },
+            {
+              "type": "any",
+              "operator": "notExists",
+              "path": "$output.intents"
+            }
+          ]
+        }
+      ],
+      "globalVariables": [
+        {
+          "name": "query",
+          "referencePath": "$input.query"
+        },
+        {
+          "name": "rawQuery",
+          "referencePath": "$input.rawQuery"
+        },
+        {
+          "name": "conversationId",
+          "referencePath": "$input.conversationId"
+        }
+      ]
+    },
+    {
+      "_id": "18d45993-ebc1-4990-b1eb-1dc3a293d3f9",
+      "type": "Input",
+      "config": {
+        "name": "User Input",
+        "description": "Get user input",
+        "type": "string"
+      },
+      "transitions": [
+        {
+          "_id": "18d45993-ebc1-4990-b1eb-1dc3a293d3f9-6aef435c-f29c-4a2b-9673-81b79920fdf7",
+          "name": "Default",
+          "nextTask": "6aef435c-f29c-4a2b-9673-81b79920fdf7"
+        }
+      ],
+      "globalVariables": [
+        {
+          "name": "query",
+          "referencePath": "$output.userInput"
+        },
+        {
+          "name": "rawQuery",
+          "referencePath": "$output.userInput"
+        },
+        {
+          "name": "selfLoopMiniAgent",
+          "referencePath": "true"
+        }
+      ]
+    },
+    {
+      "_id": "6aef435c-f29c-4a2b-9673-81b79920fdf7",
+      "type": "Loader",
+      "config": {
+        "name": "Loader",
+        "description": "Display loader message",
+        "type": "loader",
+        "text": "Just a moment... identifying the best approach to assist you."
+      },
+      "transitions": [
+        {
+          "_id": "6aef435c-f29c-4a2b-9673-81b79920fdf7-d98903b8-54fd-4d7c-8287-e09db177782f",
+          "name": "Default",
+          "nextTask": "d98903b8-54fd-4d7c-8287-e09db177782f"
+        }
+      ]
+    },
+    {
+      "_id": "d98903b8-54fd-4d7c-8287-e09db177782f",
+      "type": "IntentClassification",
+      "config": {
+        "name": "Intent Classification",
+        "description": "Classify the intent of the user message",
+        "modelId": "4cf651d9-edf3-455f-a22e-53cc67fcc07b",
+        "intents": [
+          {
+            "name": "Detect Anomalies",
+            "description": "Identifies unusual patterns or activities in trading volumes that may indicate fraudulent behavior.",
+            "examples": [
+              "Is there any suspicious activity in today's trading?",
+              "Detect any anomalies in the recent transactions.",
+              "Are there any unusual trading volumes today?"
+            ]
+          },
+          {
+            "name": "Scam Alert",
+            "description": "Generates alerts for potential scams based on predefined thresholds and NLP analysis.",
+            "examples": [
+              "Alert me if there's a potential scam.",
+              "Notify me about any scam alerts.",
+              "Is there a scam alert for this transaction?"
+            ]
+          }
+        ],
+        "query": "$agent.query"
+      },
+      "transitions": [
+        {
+          "_id": "d98903b8-54fd-4d7c-8287-e09db177782f-165594bf-15bd-4c80-9d6a-56a74da05814",
+          "name": "If Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intentMatched",
+              "value": "true"
+            }
+          ],
+          "nextTask": "165594bf-15bd-4c80-9d6a-56a74da05814"
+        },
+        {
+          "_id": "d98903b8-54fd-4d7c-8287-e09db177782f-a07e1347-076c-44a3-a0de-ec2c51028a8b",
+          "name": "If No Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intentMatched",
+              "value": "false"
+            }
+          ],
+          "nextTask": "a07e1347-076c-44a3-a0de-ec2c51028a8b"
+        }
+      ]
+    },
+    {
+      "_id": "165594bf-15bd-4c80-9d6a-56a74da05814",
+      "type": "JSFunction",
+      "config": {
+        "name": "JS Function",
+        "description": "Execute JS function",
+        "code": "\nconst main = () => {\n    const currentExecutionId = _id;\n    const intents = agent?.icIntents?.[currentExecutionId] || input.intents;\n    const currentIndex = agent?.icLoopIndexes?.[currentExecutionId] || 0;\n    const currentIntent = intents[currentIndex] || {};\n    const { intent, task } = currentIntent;\n    const state = currentIndex === intents.length ? 'end' : 'continue'\n    const icLoopIndexes = { ...(agent?.icLoopIndexes || {}), [_id]: state === 'end' ? undefined : currentIndex + 1 };\n    const icIntents = { ...(agent?.icIntents || {}), [_id]: state === 'end' ? undefined : intents };\n    return { ...input, intent, state: currentIndex === intents.length ? 'end' : 'continue', icLoopIndexes, icIntents, query: task };\n};\n\nmain()\n"
+      },
+      "globalVariables": [
+        {
+          "referencePath": "$output.icLoopIndexes",
+          "name": "icLoopIndexes"
+        },
+        {
+          "referencePath": "$output.icIntents",
+          "name": "icIntents"
+        }
+      ],
+      "transitions": [
+        {
+          "_id": "165594bf-15bd-4c80-9d6a-56a74da05814-8ee312dc-9588-4bcc-9568-e4d2e82f82f2",
+          "name": "If Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intent",
+              "value": "Detect Anomalies"
+            }
+          ],
+          "nextTask": "8ee312dc-9588-4bcc-9568-e4d2e82f82f2"
+        },
+        {
+          "_id": "165594bf-15bd-4c80-9d6a-56a74da05814-90f0046c-0395-459d-9140-a7dad991165b",
+          "name": "If Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intent",
+              "value": "Scam Alert"
+            }
+          ],
+          "nextTask": "90f0046c-0395-459d-9140-a7dad991165b"
+        },
+        {
+          "_id": "165594bf-15bd-4c80-9d6a-56a74da05814-18d45993-ebc1-4990-b1eb-1dc3a293d3f9",
+          "name": "If Self Loop",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$agent.selfLoopMiniAgent",
+              "value": "true"
+            },
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.state",
+              "value": "end"
+            }
+          ],
+          "nextTask": "18d45993-ebc1-4990-b1eb-1dc3a293d3f9"
+        }
+      ]
+    },
+    {
+      "_id": "8ee312dc-9588-4bcc-9568-e4d2e82f82f2",
+      "type": "Workflow",
+      "config": {
+        "name": "Intent - Detect Anomalies",
+        "description": "Workflow for intent - Detect Anomalies",
+        "workflowId": "bfe1e2f7-5ae2-4ab7-869c-18f644f1db47"
+      },
+      "transitions": [
+        {
+          "_id": "8ee312dc-9588-4bcc-9568-e4d2e82f82f2-165594bf-15bd-4c80-9d6a-56a74da05814",
+          "name": "Mini agent execution completed",
+          "nextTask": "165594bf-15bd-4c80-9d6a-56a74da05814"
+        }
+      ]
+    },
+    {
+      "_id": "90f0046c-0395-459d-9140-a7dad991165b",
+      "type": "Workflow",
+      "config": {
+        "name": "Intent - Scam Alert",
+        "description": "Workflow for intent - Scam Alert",
+        "workflowId": "23e7c3fc-c095-44cc-8aff-8b10293c6f2c"
+      },
+      "transitions": [
+        {
+          "_id": "90f0046c-0395-459d-9140-a7dad991165b-165594bf-15bd-4c80-9d6a-56a74da05814",
+          "name": "Mini agent execution completed",
+          "nextTask": "165594bf-15bd-4c80-9d6a-56a74da05814"
+        }
+      ]
+    },
+    {
+      "_id": "a07e1347-076c-44a3-a0de-ec2c51028a8b",
+      "transitions": [
+        {
+          "_id": "a07e1347-076c-44a3-a0de-ec2c51028a8b-18d45993-ebc1-4990-b1eb-1dc3a293d3f9",
+          "name": "If Self Loop",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$agent.selfLoopMiniAgent",
+              "value": "true"
+            }
+          ],
+          "nextTask": "18d45993-ebc1-4990-b1eb-1dc3a293d3f9"
+        }
+      ],
+      "type": "Output",
+      "config": {
+        "name": "Output",
+        "description": "Output the response to the user",
+        "type": "external",
+        "text": "Unable to complete task $agent.query"
+      }
+    },
+    {
+      "_id": "e617dbfd-9bd7-414d-a923-4eb02a3d601a",
+      "transitions": [
+        {
+          "_id": "e617dbfd-9bd7-414d-a923-4eb02a3d601a-18d45993-ebc1-4990-b1eb-1dc3a293d3f9",
+          "name": "If Self Loop",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$agent.selfLoopMiniAgent",
+              "value": "true"
+            }
+          ],
+          "nextTask": "18d45993-ebc1-4990-b1eb-1dc3a293d3f9"
+        }
+      ],
+      "type": "Display",
+      "config": {
+        "name": "Display",
+        "description": "Display the response to the user",
+        "type": "text",
+        "text": "$input.content"
+      }
+    }
+  ],
+  "type": "Conversational",
+  "version": "latest"
+}

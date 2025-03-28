@@ -1,0 +1,337 @@
+{
+  "_id": "6c7282a9-0786-407b-83ad-2670af059cc0",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "ma-risksentinel-3328-primary-workflow-for-risk-sentinel",
+  "isMiniAgentPrimaryWorkflow": true,
+  "name": "Primary Workflow for RiskSentinel",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "startTaskId": "c5ab5e6f-0410-4667-b6db-4e80c401c2a8",
+  "status": "Active",
+  "tasks": [
+    {
+      "_id": "c5ab5e6f-0410-4667-b6db-4e80c401c2a8",
+      "type": "PassThrough",
+      "config": {
+        "name": "Pass Through",
+        "description": "Pass through the input to the output"
+      },
+      "transitions": [
+        {
+          "_id": "4f489f17-942f-4141-bad7-b18842113c8d-c5ab5e6f-0410-4667-b6db-4e80c401c2a8",
+          "nextTask": "4f489f17-942f-4141-bad7-b18842113c8d",
+          "name": "If query doesnt exists",
+          "rules": [
+            {
+              "type": "any",
+              "operator": "notExists",
+              "path": "$output.query"
+            }
+          ]
+        },
+        {
+          "_id": "5783baf9-b76d-47c3-9e58-6100e4247c74-c5ab5e6f-0410-4667-b6db-4e80c401c2a8",
+          "nextTask": "5783baf9-b76d-47c3-9e58-6100e4247c74",
+          "name": "If intents are already classified",
+          "rules": [
+            {
+              "type": "any",
+              "operator": "exists",
+              "path": "$output.intents"
+            },
+            {
+              "type": "any",
+              "operator": "exists",
+              "path": "$output.query"
+            }
+          ]
+        },
+        {
+          "_id": "c5ab5e6f-0410-4667-b6db-4e80c401c2a8-98076e53-402c-4fe5-ab14-84e071104745",
+          "name": "If query exists",
+          "nextTask": "98076e53-402c-4fe5-ab14-84e071104745",
+          "rules": [
+            {
+              "type": "any",
+              "operator": "exists",
+              "path": "$output.query"
+            },
+            {
+              "type": "any",
+              "operator": "notExists",
+              "path": "$output.intents"
+            }
+          ]
+        }
+      ],
+      "globalVariables": [
+        {
+          "name": "query",
+          "referencePath": "$input.query"
+        },
+        {
+          "name": "rawQuery",
+          "referencePath": "$input.rawQuery"
+        },
+        {
+          "name": "conversationId",
+          "referencePath": "$input.conversationId"
+        }
+      ]
+    },
+    {
+      "_id": "4f489f17-942f-4141-bad7-b18842113c8d",
+      "type": "Input",
+      "config": {
+        "name": "User Input",
+        "description": "Get user input",
+        "type": "string"
+      },
+      "transitions": [
+        {
+          "_id": "4f489f17-942f-4141-bad7-b18842113c8d-98076e53-402c-4fe5-ab14-84e071104745",
+          "name": "Default",
+          "nextTask": "98076e53-402c-4fe5-ab14-84e071104745"
+        }
+      ],
+      "globalVariables": [
+        {
+          "name": "query",
+          "referencePath": "$output.userInput"
+        },
+        {
+          "name": "rawQuery",
+          "referencePath": "$output.userInput"
+        },
+        {
+          "name": "selfLoopMiniAgent",
+          "referencePath": "true"
+        }
+      ]
+    },
+    {
+      "_id": "98076e53-402c-4fe5-ab14-84e071104745",
+      "type": "Loader",
+      "config": {
+        "name": "Loader",
+        "description": "Display loader message",
+        "type": "loader",
+        "text": "Just a moment... identifying the best approach to assist you."
+      },
+      "transitions": [
+        {
+          "_id": "98076e53-402c-4fe5-ab14-84e071104745-81e52e34-461d-49e9-8ffd-d227ddf2e339",
+          "name": "Default",
+          "nextTask": "81e52e34-461d-49e9-8ffd-d227ddf2e339"
+        }
+      ]
+    },
+    {
+      "_id": "81e52e34-461d-49e9-8ffd-d227ddf2e339",
+      "type": "IntentClassification",
+      "config": {
+        "name": "Intent Classification",
+        "description": "Classify the intent of the user message",
+        "modelId": "4cf651d9-edf3-455f-a22e-53cc67fcc07b",
+        "intents": [
+          {
+            "name": "Risk Assessment",
+            "description": "Evaluates the risk level of a portfolio using correlation matrices and decision tree analysis.",
+            "examples": [
+              "Assess the risk of my current portfolio.",
+              "What is the risk level of my investments?",
+              "Evaluate the risk using correlation matrices."
+            ]
+          },
+          {
+            "name": "Volatility Alerts",
+            "description": "Generates alerts for significant volatility changes in the market.",
+            "examples": [
+              "Alert me about any significant market volatility.",
+              "Notify me if there's a sudden change in market volatility.",
+              "Are there any volatility alerts for my portfolio?"
+            ]
+          }
+        ],
+        "query": "$agent.query"
+      },
+      "transitions": [
+        {
+          "_id": "81e52e34-461d-49e9-8ffd-d227ddf2e339-5783baf9-b76d-47c3-9e58-6100e4247c74",
+          "name": "If Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intentMatched",
+              "value": "true"
+            }
+          ],
+          "nextTask": "5783baf9-b76d-47c3-9e58-6100e4247c74"
+        },
+        {
+          "_id": "81e52e34-461d-49e9-8ffd-d227ddf2e339-39b94018-d1de-46e7-af78-b6cd45d54ede",
+          "name": "If No Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intentMatched",
+              "value": "false"
+            }
+          ],
+          "nextTask": "39b94018-d1de-46e7-af78-b6cd45d54ede"
+        }
+      ]
+    },
+    {
+      "_id": "5783baf9-b76d-47c3-9e58-6100e4247c74",
+      "type": "JSFunction",
+      "config": {
+        "name": "JS Function",
+        "description": "Execute JS function",
+        "code": "\nconst main = () => {\n    const currentExecutionId = _id;\n    const intents = agent?.icIntents?.[currentExecutionId] || input.intents;\n    const currentIndex = agent?.icLoopIndexes?.[currentExecutionId] || 0;\n    const currentIntent = intents[currentIndex] || {};\n    const { intent, task } = currentIntent;\n    const state = currentIndex === intents.length ? 'end' : 'continue'\n    const icLoopIndexes = { ...(agent?.icLoopIndexes || {}), [_id]: state === 'end' ? undefined : currentIndex + 1 };\n    const icIntents = { ...(agent?.icIntents || {}), [_id]: state === 'end' ? undefined : intents };\n    return { ...input, intent, state: currentIndex === intents.length ? 'end' : 'continue', icLoopIndexes, icIntents, query: task };\n};\n\nmain()\n"
+      },
+      "globalVariables": [
+        {
+          "referencePath": "$output.icLoopIndexes",
+          "name": "icLoopIndexes"
+        },
+        {
+          "referencePath": "$output.icIntents",
+          "name": "icIntents"
+        }
+      ],
+      "transitions": [
+        {
+          "_id": "5783baf9-b76d-47c3-9e58-6100e4247c74-09a98338-2dc6-445e-8f65-d9553139d8fa",
+          "name": "If Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intent",
+              "value": "Risk Assessment"
+            }
+          ],
+          "nextTask": "09a98338-2dc6-445e-8f65-d9553139d8fa"
+        },
+        {
+          "_id": "5783baf9-b76d-47c3-9e58-6100e4247c74-81db2f42-3e9e-4ef1-a39d-99cefde2caf4",
+          "name": "If Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intent",
+              "value": "Volatility Alerts"
+            }
+          ],
+          "nextTask": "81db2f42-3e9e-4ef1-a39d-99cefde2caf4"
+        },
+        {
+          "_id": "5783baf9-b76d-47c3-9e58-6100e4247c74-4f489f17-942f-4141-bad7-b18842113c8d",
+          "name": "If Self Loop",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$agent.selfLoopMiniAgent",
+              "value": "true"
+            },
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.state",
+              "value": "end"
+            }
+          ],
+          "nextTask": "4f489f17-942f-4141-bad7-b18842113c8d"
+        }
+      ]
+    },
+    {
+      "_id": "09a98338-2dc6-445e-8f65-d9553139d8fa",
+      "type": "Workflow",
+      "config": {
+        "name": "Intent - Risk Assessment",
+        "description": "Workflow for intent - Risk Assessment",
+        "workflowId": "b759f49b-74bc-49d1-b888-cadbc85ce3a9"
+      },
+      "transitions": [
+        {
+          "_id": "09a98338-2dc6-445e-8f65-d9553139d8fa-5783baf9-b76d-47c3-9e58-6100e4247c74",
+          "name": "Mini agent execution completed",
+          "nextTask": "5783baf9-b76d-47c3-9e58-6100e4247c74"
+        }
+      ]
+    },
+    {
+      "_id": "81db2f42-3e9e-4ef1-a39d-99cefde2caf4",
+      "type": "Workflow",
+      "config": {
+        "name": "Intent - Volatility Alerts",
+        "description": "Workflow for intent - Volatility Alerts",
+        "workflowId": "71482dff-aef0-484a-9ea2-9829fd15f159"
+      },
+      "transitions": [
+        {
+          "_id": "81db2f42-3e9e-4ef1-a39d-99cefde2caf4-5783baf9-b76d-47c3-9e58-6100e4247c74",
+          "name": "Mini agent execution completed",
+          "nextTask": "5783baf9-b76d-47c3-9e58-6100e4247c74"
+        }
+      ]
+    },
+    {
+      "_id": "39b94018-d1de-46e7-af78-b6cd45d54ede",
+      "transitions": [
+        {
+          "_id": "39b94018-d1de-46e7-af78-b6cd45d54ede-4f489f17-942f-4141-bad7-b18842113c8d",
+          "name": "If Self Loop",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$agent.selfLoopMiniAgent",
+              "value": "true"
+            }
+          ],
+          "nextTask": "4f489f17-942f-4141-bad7-b18842113c8d"
+        }
+      ],
+      "type": "Output",
+      "config": {
+        "name": "Output",
+        "description": "Output the response to the user",
+        "type": "external",
+        "text": "Unable to complete task $agent.query"
+      }
+    },
+    {
+      "_id": "a5b75a3f-8719-4eb5-841e-34600cfa84cf",
+      "transitions": [
+        {
+          "_id": "a5b75a3f-8719-4eb5-841e-34600cfa84cf-4f489f17-942f-4141-bad7-b18842113c8d",
+          "name": "If Self Loop",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$agent.selfLoopMiniAgent",
+              "value": "true"
+            }
+          ],
+          "nextTask": "4f489f17-942f-4141-bad7-b18842113c8d"
+        }
+      ],
+      "type": "Display",
+      "config": {
+        "name": "Display",
+        "description": "Display the response to the user",
+        "type": "text",
+        "text": "$input.content"
+      }
+    }
+  ],
+  "type": "Conversational",
+  "version": "latest"
+}
