@@ -1,0 +1,39 @@
+{
+  "_id": "81a5a7ef-8f8e-4aac-b00a-d29f88060be6",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "risksentinel-3328",
+  "intentClassification": {
+    "modelId": "4cf651d9-edf3-455f-a22e-53cc67fcc07b"
+  },
+  "intents": [
+    {
+      "_id": "risk-assessment-3328",
+      "name": "Risk Assessment",
+      "description": "Evaluates the risk level of a portfolio using correlation matrices and decision tree analysis.",
+      "examples": [
+        "Assess the risk of my current portfolio.",
+        "What is the risk level of my investments?",
+        "Evaluate the risk using correlation matrices."
+      ],
+      "flowType": "Workflow",
+      "workflowId": "b759f49b-74bc-49d1-b888-cadbc85ce3a9"
+    },
+    {
+      "_id": "volatility-alerts-3328",
+      "name": "Volatility Alerts",
+      "description": "Generates alerts for significant volatility changes in the market.",
+      "examples": [
+        "Alert me about any significant market volatility.",
+        "Notify me if there's a sudden change in market volatility.",
+        "Are there any volatility alerts for my portfolio?"
+      ],
+      "flowType": "Workflow",
+      "workflowId": "71482dff-aef0-484a-9ea2-9829fd15f159"
+    }
+  ],
+  "name": "RiskSentinel",
+  "primaryWorkflowId": "6c7282a9-0786-407b-83ad-2670af059cc0",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "scope": "Ensures portfolio safety by using decision tree analysis, correlation matrices, and volatility alerts to manage and mitigate risks.",
+  "status": "Active"
+}
