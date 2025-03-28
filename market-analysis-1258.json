@@ -1,0 +1,682 @@
+{
+  "_id": "969da6eb-ade6-4f94-b74d-4d58fdda46ad",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "market-analysis-1258",
+  "name": "Workflow for Market Analysis",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "startTaskId": "68248b80-de1c-4519-8627-0be84027dcb9",
+  "status": "Active",
+  "tasks": [
+    {
+      "_id": "68248b80-de1c-4519-8627-0be84027dcb9",
+      "type": "Display",
+      "config": {
+        "description": "Display the response to the user",
+        "name": "Display",
+        "type": "text",
+        "text": "Hi there! Intent $input.intent has been matched",
+        "formatVariables": [],
+        "rawText": ""
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "68248b80-de1c-4519-8627-0be84027dcb9-1743160486731",
+          "nextTask": "1743160486731"
+        }
+      ]
+    },
+    {
+      "_id": "1743160486731",
+      "type": "Prompt",
+      "config": {
+        "description": "Prompt for LLM",
+        "name": "Prompt",
+        "modelId": "gpt-4o",
+        "systemPrompt": "Your task is to extract the company name from a user's query and return it in a JSON format. Ensure the response follows the structure below:\n\n{ \"companyName\": \"Extracted Company Name\" }\n\n\nFocus solely on identifying and returning company names. Ignore any queries that do not pertain to this task.\n\nIf you dont find any company in the user query , your response should include\n{ \"companyNotFound\": true }",
+        "base64DocumentData": "",
+        "documentIds": "",
+        "responseFormat": "json",
+        "query": "$agent.query",
+        "temperature": null
+      },
+      "transitions": [
+        {
+          "name": "Sucess Call",
+          "rules": [
+            {
+              "type": "any",
+              "path": "$output.error",
+              "operator": "notExists",
+              "value": ""
+            }
+          ],
+          "clause": "And",
+          "_id": "1743160486731-1743160943075",
+          "nextTask": "1743160943075"
+        },
+        {
+          "name": "Not working",
+          "rules": [
+            {
+              "type": "any",
+              "path": "$output.error",
+              "operator": "exists",
+              "value": ""
+            }
+          ],
+          "clause": "And",
+          "_id": "1743160486731-1743161495482",
+          "nextTask": "1743161495482"
+        }
+      ]
+    },
+    {
+      "_id": "1743160943075",
+      "type": "APICall",
+      "config": {
+        "description": "Make an API call",
+        "name": "API Call",
+        "url": "https://www.alphavantage.co/query",
+        "data": "",
+        "dataFormat": "raw",
+        "rawDataFormatType": "text",
+        "headers": [],
+        "params": [
+          {
+            "key": "function",
+            "value": "SYMBOL_SEARCH"
+          },
+          {
+            "key": "apikey",
+            "value": "$secret.STOCK_API_KEY"
+          },
+          {
+            "key": "keywords",
+            "value": "$input.content.companyName"
+          }
+        ],
+        "method": "GET"
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "1743160943075-1743165754509",
+          "nextTask": "1743165754509"
+        }
+      ]
+    },
+    {
+      "_id": "1743161495482",
+      "type": "Display",
+      "config": {
+        "description": "Show data",
+        "name": "Display (1)",
+        "formatVariables": [],
+        "type": "text",
+        "text": "<p>Error! Unable to find the Stock.</p>",
+        "rawText": "Error! Unable to find the Stock."
+      },
+      "transitions": []
+    },
+    {
+      "_id": "1743165754509",
+      "type": "JSFunction",
+      "config": {
+        "description": "Execute JavaScript code",
+        "name": "JavaScript",
+        "snippetId": "bd4f2bbd-c7f7-4c7e-b662-b8521b4c0d5c"
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "1743165754509-1743176792162",
+          "nextTask": "1743176792162"
+        }
+      ]
+    },
+    {
+      "_id": "1743176792162",
+      "type": "Input",
+      "config": {
+        "description": "Take user input",
+        "name": "Input",
+        "type": "string"
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "1743176792162-1743177037967",
+          "nextTask": "1743177037967"
+        }
+      ],
+      "globalVariables": [
+        {
+          "name": "selectedStock",
+          "referencePath": "$output.userInput"
+        }
+      ]
+    },
+    {
+      "_id": "1743177037967",
+      "type": "Loader",
+      "config": {
+        "description": "Show loading messages in conversation",
+        "name": "Loader",
+        "text": "Loading...."
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "1743177037967-1743177074174",
+          "nextTask": "1743177074174"
+        }
+      ]
+    },
+    {
+      "_id": "1743177074174",
+      "type": "APICall",
+      "config": {
+        "description": "Make an API call",
+        "name": "Overview",
+        "url": "https://www.alphavantage.co/query",
+        "data": "",
+        "dataFormat": "raw",
+        "rawDataFormatType": "text",
+        "headers": [],
+        "params": [
+          {
+            "key": "function",
+            "value": "OVERVIEW"
+          },
+          {
+            "key": "apikey",
+            "value": "$secret.STOCK_API_KEY"
+          },
+          {
+            "key": "symbol",
+            "value": "$agent.selectedStock"
+          }
+        ],
+        "method": "GET"
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "1743177074174-1743177037967-1743177176736",
+          "nextTask": "1743177037967-1743177176736"
+        }
+      ],
+      "globalVariables": [
+        {
+          "name": "selectedStock",
+          "referencePath": "$output.data"
+        }
+      ]
+    },
+    {
+      "_id": "1743177037967-1743177176736",
+      "type": "Loader",
+      "config": {
+        "description": "Show loading messages in conversation",
+        "name": "Loader",
+        "text": "Loading...."
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "1743177037967-1743177176736-1743177074174-1743177181114",
+          "nextTask": "1743177074174-1743177181114"
+        }
+      ]
+    },
+    {
+      "_id": "1743177074174-1743177181114",
+      "type": "APICall",
+      "config": {
+        "description": "Make an API call",
+        "name": "Balance Sheet",
+        "url": "https://www.alphavantage.co/query",
+        "data": "",
+        "dataFormat": "raw",
+        "rawDataFormatType": "text",
+        "headers": [],
+        "params": [
+          {
+            "key": "function",
+            "value": "BALANCE_SHEET"
+          },
+          {
+            "key": "apikey",
+            "value": "$secret.STOCK_API_KEY"
+          },
+          {
+            "key": "symbol",
+            "value": "$agent.selectedStock"
+          }
+        ],
+        "method": "GET"
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "1743177074174-1743177181114-1743177382296",
+          "nextTask": "1743177382296"
+        }
+      ],
+      "globalVariables": [
+        {
+          "name": "balanceSheetData",
+          "referencePath": "$output.data"
+        }
+      ]
+    },
+    {
+      "_id": "1743177382296",
+      "type": "Prompt",
+      "config": {
+        "description": "Prompt for LLM",
+        "name": "Prompt (1)",
+        "modelId": "gpt-4o",
+        "base64DocumentData": "",
+        "documentIds": "",
+        "responseFormat": "json",
+        "query": "Generate a summary in required format",
+        "systemPrompt": "You are a helpful assistant to a financial advisor. Your task is to generate an insightful, clear, and accurate report related to company financial health using the data provided to you within 300 to 500 words. Use your expertise in the financial industry to enhance the analysis, referencing benchmarks  or standard financial data when relevant, to create a report that is both insightful and practical.\nData provided to you contains financial data of company including \n- Company Overview (Fundamentals, P/E Ratio, Market Cap, Dividend Yield, Profit Margin, Debt-to-Equity, etc.)\n- Balance Sheet (Assets, Liabilities, Cash Reserves, Debt) use your knowledge of the wealth and finance industry to interpret the data in the most accurate way. \nUse your knowledge of NASDAQ and other stock exchanges to interpret ticker symbols, operating sector and other general information of the securities.\nThe report must include a mix of summaries and charts, presented in an engaging and professional format. \nFor summaries:\nStructure the text beautifully using appropriate formatting such as bold text for emphasis, bullet points, and numbered lists where necessary.\nEnsure the content is easy to read and conveys the message effectively without including HTML.\nFor charts:\nGenerate a valid Chart.js version 4 configuration.\nUse solid colors for chart aesthetics.\nAssume the unit of money is always USD($) while generating labels of portfolio value, total value, unrealized values, etc.\nRespond precisely to the user's query without making assumptions. Use the data and instructions provided in the query to determine the chart type, labels, datasets, and options.\nDo not apply additional logic or assumptions about the user's intent beyond the instructions provided. \nThe final output must be a valid JSON object with the following structure:\nAn object containing two keys: \"label\" (the title of the report) and \"reportData\" (an array of objects).\nEach object in reportData must be either:\nA summary in the format: {type: \"summary\", content: <rich-text-content>}.\nA chart in the format: {type: \"chart\", chartLabel: <chart-title-label>, content: <chart-js-config>}.\nIt is a mandatory, non-negotiable and hard requirement that the JSON output must contain keys as “label” and “reportData” only. These keys are mandatory and case-sensitive. Any discrepancy or deviation in key names or configurations results in validation error, which is not acceptable in any case. \n\nPresentation Order:\nAlternate between summaries and charts for readability (e.g., summary, chart, summary, chart, conclusion summary). Avoid placing two charts consecutively.\nAdditional Notes:\n\nIf the required data is unavailable, do not attempt to generate a generic response. Instead, politely and concisely state: 'The necessary data is not available to answer your query.' \nDo not request additional data or provide speculative answers.\n\nStrict Requirements:\nUse bullet points,  medium headings, bold text and normal text for emphasis and clarity.\nCharts must align with Chart.js version 4 specifications and use solid colors.\nThe output must be valid JSON, with no additional commentary or explanation outside the JSON structure.\nDo not modify the provided data while generating the chart output. You must present the data as it is and always ensure that the number of labels and data points generated always match. It is strictly unacceptable to generate that chart representation which does not match with the provided data.\nLabels of the generated charts must be derived from data, representing sensible and human-readable names (like - names of stock symbols, security assets, master assets class, etc). \nIt is a mandatory, non-negotiable and hard requirement for you to generate a valid output for each query.\n\nData:\n- Company Overview - $agent.overviewData\n- Balance Sheet - $agent.balanceSheetData\n",
+        "temperature": null
+      },
+      "transitions": [
+        {
+          "name": "Default",
+          "_id": "1743177382296-1743177638263",
+          "nextTask": "1743177638263"
+        }
+      ]
+    },
+    {
+      "_id": "1743177638263",
+      "type": "Display",
+      "config": {
+        "description": "Show data",
+        "name": "Display (1)",
+        "type": "reportSummary",
+        "text": "",
+        "rawText": "",
+        "formatVariables": [],
+        "summaryContent": "$input.content.reportData",
+        "label": "$input.content.label"
+      },
+      "transitions": []
+    }
+  ],
+  "type": "Conversational",
+  "version": "latest",
+  "reactflow": {
+    "viewport": {
+      "x": -319.5199094419395,
+      "y": 44.12023759943395,
+      "zoom": 0.5743491774985175
+    },
+    "nodes": [
+      {
+        "id": "0",
+        "type": "Start",
+        "position": {
+          "x": 360,
+          "y": 257
+        },
+        "data": {},
+        "deletable": false,
+        "measured": {
+          "width": 274,
+          "height": 135
+        },
+        "selected": false
+      },
+      {
+        "position": {
+          "x": 518,
+          "y": -15
+        },
+        "type": "Display",
+        "id": "68248b80-de1c-4519-8627-0be84027dcb9",
+        "data": {},
+        "measured": {
+          "width": 293,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 770,
+          "y": 392
+        },
+        "type": "Prompt",
+        "id": "1743160486731",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 1113,
+          "y": 105
+        },
+        "type": "APICall",
+        "id": "1743160943075",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 912,
+          "y": -53
+        },
+        "type": "Display",
+        "id": "1743161495482",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 1221,
+          "y": 309
+        },
+        "type": "JSFunction",
+        "id": "1743165754509",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 1530,
+          "y": 75
+        },
+        "type": "Input",
+        "id": "1743176792162",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 1546,
+          "y": 445
+        },
+        "type": "Loader",
+        "id": "1743177037967",
+        "data": {},
+        "measured": {
+          "width": 320,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 1964,
+          "y": 344
+        },
+        "type": "APICall",
+        "id": "1743177074174",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 1919,
+          "y": 62
+        },
+        "type": "Loader",
+        "id": "1743177037967-1743177176736",
+        "data": {},
+        "measured": {
+          "width": 320,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 2267,
+          "y": 172
+        },
+        "type": "APICall",
+        "id": "1743177074174-1743177181114",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 2272,
+          "y": 507
+        },
+        "type": "Prompt",
+        "id": "1743177382296",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      },
+      {
+        "position": {
+          "x": 2773,
+          "y": 232
+        },
+        "type": "Display",
+        "id": "1743177638263",
+        "data": {},
+        "measured": {
+          "width": 260,
+          "height": 77
+        },
+        "selected": false,
+        "dragging": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "0-0",
+        "type": "Start",
+        "source": "0",
+        "target": "68248b80-de1c-4519-8627-0be84027dcb9",
+        "sourceHandle": "0-source-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "68248b80-de1c-4519-8627-0be84027dcb9-1743160486731",
+        "source": "68248b80-de1c-4519-8627-0be84027dcb9",
+        "target": "1743160486731",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "68248b80-de1c-4519-8627-0be84027dcb9-source-1",
+        "targetHandle": "1743160486731-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743160486731-1743160943075",
+        "source": "1743160486731",
+        "target": "1743160943075",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743160486731-source-1",
+        "targetHandle": "1743160943075-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743160486731-1743161495482",
+        "source": "1743160486731",
+        "target": "1743161495482",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743160486731-source-1",
+        "targetHandle": "1743161495482-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743160943075-1743165754509",
+        "source": "1743160943075",
+        "target": "1743165754509",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743160943075-source-1",
+        "targetHandle": "1743165754509-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743165754509-1743176792162",
+        "source": "1743165754509",
+        "target": "1743176792162",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743165754509-source-1",
+        "targetHandle": "1743176792162-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743176792162-1743177037967",
+        "source": "1743176792162",
+        "target": "1743177037967",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743176792162-source-1",
+        "targetHandle": "1743177037967-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743177037967-1743177074174",
+        "source": "1743177037967",
+        "target": "1743177074174",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743177037967-source-1",
+        "targetHandle": "1743177074174-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743177074174-1743177037967-1743177176736",
+        "source": "1743177074174",
+        "target": "1743177037967-1743177176736",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743177074174-source-1",
+        "targetHandle": "1743177037967-1743177176736-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743177037967-1743177176736-1743177074174-1743177181114",
+        "source": "1743177037967-1743177176736",
+        "target": "1743177074174-1743177181114",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743177037967-1743177176736-source-1",
+        "targetHandle": "1743177074174-1743177181114-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743177074174-1743177181114-1743177382296",
+        "source": "1743177074174-1743177181114",
+        "target": "1743177382296",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743177074174-1743177181114-source-1",
+        "targetHandle": "1743177382296-target-1",
+        "selected": false
+      },
+      {
+        "type": "Transition",
+        "id": "1743177382296-1743177638263",
+        "source": "1743177382296",
+        "target": "1743177638263",
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 22,
+          "height": 22
+        },
+        "sourceHandle": "1743177382296-source-1",
+        "targetHandle": "1743177638263-target-1",
+        "selected": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,337 @@
+{
+  "_id": "57b48abc-a895-4858-a80a-a9f722865bec",
+  "aiPersonaId": "ab406a34-4a5f-45fe-8b1a-07a33e700636",
+  "integrationId": "ma-stockguru-0978-primary-workflow-for-stock-guru",
+  "isMiniAgentPrimaryWorkflow": true,
+  "name": "Primary Workflow for StockGuru",
+  "publisherAccountId": "ae529c45-c36f-4ab2-9c40-325c9af8dca3",
+  "startTaskId": "e7d80dae-e20d-4ad7-a44a-619a57e14760",
+  "status": "Active",
+  "tasks": [
+    {
+      "_id": "e7d80dae-e20d-4ad7-a44a-619a57e14760",
+      "type": "PassThrough",
+      "config": {
+        "name": "Pass Through",
+        "description": "Pass through the input to the output"
+      },
+      "transitions": [
+        {
+          "_id": "85ee49ac-1e36-4525-8014-219058e66a24-e7d80dae-e20d-4ad7-a44a-619a57e14760",
+          "nextTask": "85ee49ac-1e36-4525-8014-219058e66a24",
+          "name": "If query doesnt exists",
+          "rules": [
+            {
+              "type": "any",
+              "operator": "notExists",
+              "path": "$output.query"
+            }
+          ]
+        },
+        {
+          "_id": "083ca7d9-2a37-493e-be10-28ee6b92698d-e7d80dae-e20d-4ad7-a44a-619a57e14760",
+          "nextTask": "083ca7d9-2a37-493e-be10-28ee6b92698d",
+          "name": "If intents are already classified",
+          "rules": [
+            {
+              "type": "any",
+              "operator": "exists",
+              "path": "$output.intents"
+            },
+            {
+              "type": "any",
+              "operator": "exists",
+              "path": "$output.query"
+            }
+          ]
+        },
+        {
+          "_id": "e7d80dae-e20d-4ad7-a44a-619a57e14760-453124df-8e51-4be9-9be4-e619f5abcde2",
+          "name": "If query exists",
+          "nextTask": "453124df-8e51-4be9-9be4-e619f5abcde2",
+          "rules": [
+            {
+              "type": "any",
+              "operator": "exists",
+              "path": "$output.query"
+            },
+            {
+              "type": "any",
+              "operator": "notExists",
+              "path": "$output.intents"
+            }
+          ]
+        }
+      ],
+      "globalVariables": [
+        {
+          "name": "query",
+          "referencePath": "$input.query"
+        },
+        {
+          "name": "rawQuery",
+          "referencePath": "$input.rawQuery"
+        },
+        {
+          "name": "conversationId",
+          "referencePath": "$input.conversationId"
+        }
+      ]
+    },
+    {
+      "_id": "85ee49ac-1e36-4525-8014-219058e66a24",
+      "type": "Input",
+      "config": {
+        "name": "User Input",
+        "description": "Get user input",
+        "type": "string"
+      },
+      "transitions": [
+        {
+          "_id": "85ee49ac-1e36-4525-8014-219058e66a24-453124df-8e51-4be9-9be4-e619f5abcde2",
+          "name": "Default",
+          "nextTask": "453124df-8e51-4be9-9be4-e619f5abcde2"
+        }
+      ],
+      "globalVariables": [
+        {
+          "name": "query",
+          "referencePath": "$output.userInput"
+        },
+        {
+          "name": "rawQuery",
+          "referencePath": "$output.userInput"
+        },
+        {
+          "name": "selfLoopMiniAgent",
+          "referencePath": "true"
+        }
+      ]
+    },
+    {
+      "_id": "453124df-8e51-4be9-9be4-e619f5abcde2",
+      "type": "Loader",
+      "config": {
+        "name": "Loader",
+        "description": "Display loader message",
+        "type": "loader",
+        "text": "Just a moment... identifying the best approach to assist you."
+      },
+      "transitions": [
+        {
+          "_id": "453124df-8e51-4be9-9be4-e619f5abcde2-e3f029b4-748f-48c5-a5a2-b79a80e8bbd9",
+          "name": "Default",
+          "nextTask": "e3f029b4-748f-48c5-a5a2-b79a80e8bbd9"
+        }
+      ]
+    },
+    {
+      "_id": "e3f029b4-748f-48c5-a5a2-b79a80e8bbd9",
+      "type": "IntentClassification",
+      "config": {
+        "name": "Intent Classification",
+        "description": "Classify the intent of the user message",
+        "modelId": "4cf651d9-edf3-455f-a22e-53cc67fcc07b",
+        "intents": [
+          {
+            "name": "Investment Recommendations",
+            "description": "Offers investment advice based on user risk profiles and market trends.",
+            "examples": [
+              "What are the best stocks to invest in right now?",
+              "Give me investment recommendations based on my risk profile.",
+              "What does the market look like for a conservative investor?"
+            ]
+          },
+          {
+            "name": "Market Analysis",
+            "description": "Provides analysis of market trends and predictions using multilingual NLP.",
+            "examples": [
+              "Analyze the current market trends.",
+              "What are the predictions for the stock market this week?",
+              "Provide a market analysis in Spanish."
+            ]
+          }
+        ],
+        "query": "$agent.query"
+      },
+      "transitions": [
+        {
+          "_id": "e3f029b4-748f-48c5-a5a2-b79a80e8bbd9-083ca7d9-2a37-493e-be10-28ee6b92698d",
+          "name": "If Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intentMatched",
+              "value": "true"
+            }
+          ],
+          "nextTask": "083ca7d9-2a37-493e-be10-28ee6b92698d"
+        },
+        {
+          "_id": "e3f029b4-748f-48c5-a5a2-b79a80e8bbd9-c65f508d-51fc-4f3f-81f6-e80ee6611b99",
+          "name": "If No Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intentMatched",
+              "value": "false"
+            }
+          ],
+          "nextTask": "c65f508d-51fc-4f3f-81f6-e80ee6611b99"
+        }
+      ]
+    },
+    {
+      "_id": "083ca7d9-2a37-493e-be10-28ee6b92698d",
+      "type": "JSFunction",
+      "config": {
+        "name": "JS Function",
+        "description": "Execute JS function",
+        "code": "\nconst main = () => {\n    const currentExecutionId = _id;\n    const intents = agent?.icIntents?.[currentExecutionId] || input.intents;\n    const currentIndex = agent?.icLoopIndexes?.[currentExecutionId] || 0;\n    const currentIntent = intents[currentIndex] || {};\n    const { intent, task } = currentIntent;\n    const state = currentIndex === intents.length ? 'end' : 'continue'\n    const icLoopIndexes = { ...(agent?.icLoopIndexes || {}), [_id]: state === 'end' ? undefined : currentIndex + 1 };\n    const icIntents = { ...(agent?.icIntents || {}), [_id]: state === 'end' ? undefined : intents };\n    return { ...input, intent, state: currentIndex === intents.length ? 'end' : 'continue', icLoopIndexes, icIntents, query: task };\n};\n\nmain()\n"
+      },
+      "globalVariables": [
+        {
+          "referencePath": "$output.icLoopIndexes",
+          "name": "icLoopIndexes"
+        },
+        {
+          "referencePath": "$output.icIntents",
+          "name": "icIntents"
+        }
+      ],
+      "transitions": [
+        {
+          "_id": "083ca7d9-2a37-493e-be10-28ee6b92698d-af49f9e6-4d75-47b8-bb1d-3508097eeb7d",
+          "name": "If Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intent",
+              "value": "Investment Recommendations"
+            }
+          ],
+          "nextTask": "af49f9e6-4d75-47b8-bb1d-3508097eeb7d"
+        },
+        {
+          "_id": "083ca7d9-2a37-493e-be10-28ee6b92698d-c2a3097c-93e8-4cc2-9cfd-1a4a49474cfe",
+          "name": "If Intent is Matched",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.intent",
+              "value": "Market Analysis"
+            }
+          ],
+          "nextTask": "c2a3097c-93e8-4cc2-9cfd-1a4a49474cfe"
+        },
+        {
+          "_id": "083ca7d9-2a37-493e-be10-28ee6b92698d-85ee49ac-1e36-4525-8014-219058e66a24",
+          "name": "If Self Loop",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$agent.selfLoopMiniAgent",
+              "value": "true"
+            },
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$output.state",
+              "value": "end"
+            }
+          ],
+          "nextTask": "85ee49ac-1e36-4525-8014-219058e66a24"
+        }
+      ]
+    },
+    {
+      "_id": "af49f9e6-4d75-47b8-bb1d-3508097eeb7d",
+      "type": "Workflow",
+      "config": {
+        "name": "Intent - Investment Recommendations",
+        "description": "Workflow for intent - Investment Recommendations",
+        "workflowId": "d2e0e3f7-2014-4113-a3b6-86ec6ac944ad"
+      },
+      "transitions": [
+        {
+          "_id": "af49f9e6-4d75-47b8-bb1d-3508097eeb7d-083ca7d9-2a37-493e-be10-28ee6b92698d",
+          "name": "Mini agent execution completed",
+          "nextTask": "083ca7d9-2a37-493e-be10-28ee6b92698d"
+        }
+      ]
+    },
+    {
+      "_id": "c2a3097c-93e8-4cc2-9cfd-1a4a49474cfe",
+      "type": "Workflow",
+      "config": {
+        "name": "Intent - Market Analysis",
+        "description": "Workflow for intent - Market Analysis",
+        "workflowId": "969da6eb-ade6-4f94-b74d-4d58fdda46ad"
+      },
+      "transitions": [
+        {
+          "_id": "c2a3097c-93e8-4cc2-9cfd-1a4a49474cfe-083ca7d9-2a37-493e-be10-28ee6b92698d",
+          "name": "Mini agent execution completed",
+          "nextTask": "083ca7d9-2a37-493e-be10-28ee6b92698d"
+        }
+      ]
+    },
+    {
+      "_id": "c65f508d-51fc-4f3f-81f6-e80ee6611b99",
+      "transitions": [
+        {
+          "_id": "c65f508d-51fc-4f3f-81f6-e80ee6611b99-85ee49ac-1e36-4525-8014-219058e66a24",
+          "name": "If Self Loop",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$agent.selfLoopMiniAgent",
+              "value": "true"
+            }
+          ],
+          "nextTask": "85ee49ac-1e36-4525-8014-219058e66a24"
+        }
+      ],
+      "type": "Output",
+      "config": {
+        "name": "Output",
+        "description": "Output the response to the user",
+        "type": "external",
+        "text": "Unable to complete task $agent.query"
+      }
+    },
+    {
+      "_id": "d1ec0982-5567-4c0a-bfc5-3278b992efd3",
+      "transitions": [
+        {
+          "_id": "d1ec0982-5567-4c0a-bfc5-3278b992efd3-85ee49ac-1e36-4525-8014-219058e66a24",
+          "name": "If Self Loop",
+          "rules": [
+            {
+              "type": "string",
+              "operator": "equal",
+              "path": "$agent.selfLoopMiniAgent",
+              "value": "true"
+            }
+          ],
+          "nextTask": "85ee49ac-1e36-4525-8014-219058e66a24"
+        }
+      ],
+      "type": "Display",
+      "config": {
+        "name": "Display",
+        "description": "Display the response to the user",
+        "type": "text",
+        "text": "$input.content"
+      }
+    }
+  ],
+  "type": "Conversational",
+  "version": "latest"
+}
